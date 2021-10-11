@@ -47,7 +47,9 @@ namespace Planner.API.Controllers
        
             return Ok(model);
         }
-
+        /// <summary>
+        /// Filter Tickets by Owner in one particular Project
+        /// </summary>
         [HttpGet]
         [Route("/api/projects/{id:int}/tickets")]
         [ProducesResponseType(StatusCodes.Status200OK)]

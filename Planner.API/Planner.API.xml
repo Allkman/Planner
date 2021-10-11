@@ -4,5 +4,15 @@
         <name>Planner.API</name>
     </assembly>
     <members>
+        <member name="M:Planner.API.Controllers.ProjectController.GetProjectTickets(System.Int32,Planner.API.QueryFilters.ProjectTicketQueryFilter)">
+            <summary>
+            Filter Tickets by Owner in one particular Project
+            </summary>
+        </member>
+        <member name="M:Planner.API.Controllers.TicketController.Get(Planner.API.QueryFilters.TicketQueryFilter)">
+            <summary>
+            Get all tickets and/or filter by Title or Description
+            </summary>
+        </member>
     </members>
 </doc>

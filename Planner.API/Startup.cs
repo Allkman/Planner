@@ -20,6 +20,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Planner.API.Services;
 using System.Reflection;
+using System.IO;
 
 namespace Planner.API
 {
@@ -100,8 +101,8 @@ namespace Planner.API
                         Url = new Uri("https://opensource.org/licenses/mit"),
                     }                   
                 });
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}";
-                var xmlPath = ConfigurationPath.Combine(AppContext.BaseDirectory, xmlFile);
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
 
                 var securitySchema = new OpenApiSecurityScheme

@@ -29,6 +29,9 @@ namespace Planner.API.Controllers
             _dbContext = dbContext;
             _mapper = mapper;
         }
+        /// <summary>
+        /// Get all tickets and/or filter by Title or Description
+        /// </summary>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<TicketDTO>> Get([FromQuery] TicketQueryFilter ticketQueryFilter)
