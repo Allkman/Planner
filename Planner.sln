@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.API", "Planner.API\Planner.API.csproj", "{7D36C118-09E7-4F45-8DAF-4921DA0620E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner.API", "Planner.API\Planner.API.csproj", "{7D36C118-09E7-4F45-8DAF-4921DA0620E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.DAL", "Planner.DAL\Planner.DAL.csproj", "{C7A2F33F-7992-417C-8772-3A64353A4D2B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Planner.DAL", "Planner.DAL\Planner.DAL.csproj", "{C7A2F33F-7992-417C-8772-3A64353A4D2B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

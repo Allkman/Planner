@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebApi.QueryFilters
+namespace Planner.API.QueryFilters
 {
-    public class StageQueryFilter
+    public class TicketQueryFilter
     {
         public int? Id { get; set; }
         public string TitleOrDescription { get; set; }        

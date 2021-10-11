@@ -1,100 +1,127 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using Planner.API.DTOs;
+using Planner.API.QueryFilters;
 using Planner.DAL;
 using Planner.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApi.QueryFilters;
 
 namespace Planner.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
+    [Produces("application/json")]
     [ApiController]
     public class ProjectController : ControllerBase
     {
-        private readonly ILogger _logger;
         private readonly PlannerDbContext _dbContext;
-
-        public ProjectController(ILogger logger, PlannerDbContext dbContext)
+        private readonly IMapper _mapper;
+        public ProjectController(PlannerDbContext dbContext, IMapper mapper)
         {
-            _logger = logger;
             _dbContext = dbContext;
+            _mapper = mapper;
         }
         [HttpGet]
-        public async Task<IActionResult> Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<ProjectDTO>> Get()
         {
-            return Ok(await _dbContext.Projects.ToListAsync());
+            var entityList = await _dbContext.Projects.ToListAsync();
+            var model = _mapper.Map<IEnumerable<ProjectDTO>>(entityList);
+            return Ok(model);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpGet("{id}", Name = nameof(GetById))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ProjectDTO>> GetById(int id)
         {
-            var project = await _dbContext.Projects.FindAsync(id);
-            if (project == null)
-                return NotFound();
-
-            return Ok(project);
+            var entity = await _dbContext.Projects.Where(x => x.ProjectId == id).FirstOrDefaultAsync();
+            if (entity == null) return NotFound();     
+            var model = _mapper.Map<ProjectDTO>(entity);
+       
+            return Ok(model);
         }
 
         [HttpGet]
-        [Route("/api/projects/{pid:int}/tickets")]
-        public async Task<IActionResult> GetProjectTickets(int pId,
-            [FromQuery] ProjectStageQueryFilter filter)
+        [Route("/api/projects/{id:int}/tickets")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ProjectDTO>> GetProjectTickets(int id,
+            [FromQuery] ProjectTicketQueryFilter filter)
         {
-            IQueryable<Stage> stages = _dbContext.Stages.Where(t => t.ProjectId == pId);
+            IQueryable<Ticket> tickets = _dbContext.Tickets.Where(t => t.ProjectId == id);
             if (filter != null && !string.IsNullOrWhiteSpace(filter.Owner))
-                stages = stages.Where(t => !string.IsNullOrWhiteSpace(t.Owner) &&
+                tickets = tickets.Where(t => !string.IsNullOrWhiteSpace(t.Owner) &&
                     t.Owner.ToLower() == filter.Owner.ToLower());
 
-            var listStages = await stages.ToListAsync();
-            if (listStages == null || listStages.Count <= 0)
-                return NotFound();
+            var listTickets = await tickets.ToListAsync();
+            if (listTickets == null) return NotFound();
 
-            return Ok(listStages);
+            var model = _mapper.Map<IEnumerable<TicketDTO>>(listTickets);
+
+            return Ok(model);            
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Project project)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<ActionResult<ProjectDTO>> Post([FromBody] ProjectDTO projectDto)
         {
-            _dbContext.Projects.Add(project);
+            var model = _mapper.Map<Project>(projectDto);
+            _dbContext.Projects.Add(model);
             await _dbContext.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetById),
-                    new { id = project.ProjectId },
-                    project
-                );
+                    new { id = model.ProjectId },
+                    model
+                );           
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, Project project)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ProjectDTO>> Put([FromRoute] int id, [FromBody] ProjectDTO projectDto)
         {
-            if (id != project.ProjectId) return BadRequest();
+            if (projectDto == null)
+                return BadRequest();
 
-            _dbContext.Entry(project).State = EntityState.Modified;
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid model object");
+
+            var entity = _dbContext.Projects.FirstOrDefaultAsync(x => x.ProjectId == id);
+            if (entity == null)
+                return NotFound();
+
+            await _mapper.Map(projectDto, entity);
+            _dbContext.Entry(projectDto).State = EntityState.Modified;
 
             try
             {
                 await _dbContext.SaveChangesAsync();
+                return NoContent();
             }
-            catch
+            catch (Exception)
             {
-                if (_dbContext.Projects.Find(id) == null)
-                    return NotFound();
-                throw;
+                return StatusCode(500, "Internal server error");
             }
-            return NoContent();
+
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ProjectDTO>> Delete(int id)
         {
             var project = await _dbContext.Projects.FindAsync(id);
             if (project == null) return NotFound();
-
             _dbContext.Projects.Remove(project);
             await _dbContext.SaveChangesAsync();
 

@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebApi.QueryFilters
+namespace Planner.API.DTOs
 {
-    public class ProjectStageQueryFilter
+    public class ProjectUpdateDTO
     {
-        public string Owner { get; set; }
     }
 }

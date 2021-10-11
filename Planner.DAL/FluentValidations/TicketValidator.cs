@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Planner.DAL.FluentValidations
 {
-    public class StageValidator : AbstractValidator<Stage>
+    public class TicketValidator : AbstractValidator<Ticket>
     {
-        public StageValidator()
+        public TicketValidator()
         {
-            RuleFor(x => x.StageId).Null();
-            RuleFor(x => x.ProjectId).Null();
+            RuleFor(x => x.TicketId).Null();
+            RuleFor(x => x.ProjectId).NotNull();
             RuleFor(x => x.Title).NotEmpty();
             RuleFor(x => x.Title).Length(0, 50);
             RuleFor(x => x.Description).NotEmpty();
