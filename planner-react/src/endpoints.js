@@ -1,4 +1,3 @@
-const baseURL = process.env.REACT_APP_API_URL;
-export const projectUrl = `${baseURL}project`;
-export const stagesUrl = `${baseURL}/stage`;
+export const projectUrl = `https://localhost:44303/api/Project`;
+export const stagesUrl = `https://localhost:44303/api/Ticket`;
 

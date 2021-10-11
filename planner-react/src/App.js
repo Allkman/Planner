@@ -11,7 +11,7 @@ import {
 } from "react-router-dom";
 import LoginPage from "./Page/LoginPage";
 import ProjectPage from "./Page/ProjectPage";
-import StagePage from "./Page/StagePage";
+import TicketPage from "./Page/TicketPage";
 
 
 
@@ -45,9 +45,9 @@ class App extends Component {
               <li className="nav-item- m-1">
                 <NavLink
                   className="btn btn-light btn-outline-primary"
-                  to="/stage"
+                  to="/ticket"
                 >
-                  Stage Page
+                  Ticket Page
                 </NavLink>
               </li>
             </ul>
@@ -56,7 +56,7 @@ class App extends Component {
         <Switch>
           <Route path="/login" component={LoginPage} />
           <Route path="/project" component={ProjectPage} />
-          <Route path="/stage" component={StagePage} />
+          <Route path="/stage" component={TicketPage} />
         </Switch>
       </Router>
     );

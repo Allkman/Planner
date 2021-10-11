@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Planner.API.DTOs;
 using Planner.API.QueryFilters;
 using Planner.DAL;
@@ -15,7 +14,6 @@ using System.Threading.Tasks;
 
 namespace Planner.API.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [Produces("application/json")]
     [ApiController]
@@ -49,7 +47,7 @@ namespace Planner.API.Controllers
                        x.Description.Contains(ticketQueryFilter.TitleOrDescription,
                        StringComparison.OrdinalIgnoreCase));
             }
-
+            await Task.Delay(1);
             var model = _mapper.Map<IEnumerable<TicketDTO>>(tickets);
             return Ok(model);
         }

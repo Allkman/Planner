@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {baseURL, projectUrl} from '../endpoints.js'
+import {projectUrl} from '../endpoints.js'
 import axios from 'axios';
 
 export default class ProjectPage extends Component {
@@ -13,16 +13,10 @@ export default class ProjectPage extends Component {
     }
   }
 
-  refreshList() {
-    fetch(projectUrl)
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ projects: data });
-      });
-  }
-
   componentDidMount() {
-    this.refreshList();
+
+  axios.get(projectUrl)
+      .then(response => this.setState({ projects: response.data }));
   }
 
   changeProjectName = (e) => {

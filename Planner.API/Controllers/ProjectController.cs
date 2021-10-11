@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 
 namespace Planner.API.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [Produces("application/json")]
     [ApiController]
